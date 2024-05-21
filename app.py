@@ -37,39 +37,45 @@ class Survey(db.Model):
 # 회원가입 라우트
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    data = request.get_json()
-    email = data['email']
-    password = data['password']
-    gender = data['gender']
-    birthdate = data['birthdate']
-    
-    new_guest = Guest(email=email, password=password, gender=gender, birthdate=birthdate)
-    db.session.add(new_guest)
-    db.session.commit()
-    
-    logger.info('User created: %s', email)
-    return jsonify({"message": "User created successfully!"}), 201
+    if request.method == 'POST':
+        data = request.get_json()
+        email = data['email']
+        password = data['password']
+        gender = data['gender']
+        birthdate = data['birthdate']
+        
+        new_guest = Guest(email=email, password=password, gender=gender, birthdate=birthdate)
+        db.session.add(new_guest)
+        db.session.commit()
+        
+        logger.info('User created: %s', email)
+        return jsonify({"message": "User created successfully!"}), 201
+    else:  # GET 요청에 대한 처리
+        return jsonify({"message": "Please use POST to sign up."}), 200
 
 # 설문조사 라우트
 @app.route('/survey', methods=['GET', 'POST'])
 def survey():
-    data = request.get_json()
-    guest_id = data['guest_id']
-    role = data['role']
-    activity = data['activity']
-    experience_level = data['experience_level']
-    gender = data['gender']
-    age_group = data['age_group']
-    location = data['location']
-    activity_level = data['activity_level']
-    
-    new_survey = Survey(guest_id=guest_id, role=role, activity=activity, experience_level=experience_level, gender=gender,
-                        age_group=age_group, location=location, activity_level=activity_level)
-    db.session.add(new_survey)
-    db.session.commit()
-    
-    logger.info('Survey submitted: %s', guest_id)
-    return jsonify({"message": "Survey submitted successfully!"}), 201
+    if request.method == 'POST':
+        data = request.get_json()
+        guest_id = data['guest_id']
+        role = data['role']
+        activity = data['activity']
+        experience_level = data['experience_level']
+        gender = data['gender']
+        age_group = data['age_group']
+        location = data['location']
+        activity_level = data['activity_level']
+        
+        new_survey = Survey(guest_id=guest_id, role=role, activity=activity, experience_level=experience_level, gender=gender,
+                            age_group=age_group, location=location, activity_level=activity_level)
+        db.session.add(new_survey)
+        db.session.commit()
+        
+        logger.info('Survey submitted: %s', guest_id)
+        return jsonify({"message": "Survey submitted successfully!"}), 201
+    else:  # GET 요청에 대한 처리
+        return jsonify({"message": "Please use POST to submit a survey."}), 200
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001)
