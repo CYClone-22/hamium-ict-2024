@@ -2,11 +2,14 @@ import logging
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.exceptions import BadRequest
+import openai
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:today0430@database-1.cva6yg8oenlg.ap-northeast-2.rds.amazonaws.com/mentosdb'
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_pre_ping': True}
 db = SQLAlchemy(app)
+
+openai.api_key = 'sk-mentos-qHLdPTiXoYsq42J13McDT3BlbkFJZvXpl4ImtXbSi1eUzFEb'
 
 @app.errorhandler(BadRequest)
 def handle_bad_request(e):
@@ -50,9 +53,34 @@ def signup():
         
         logger.info('User created: %s', email)
         return jsonify({"message": "User created successfully!"}), 201
-    else:  # GET 요청에 대한 처리
+    else:  # 브라우저는 무조건 -> GET 요청에 대한 처리
         return jsonify({"message": "Please use POST to sign up."}), 200
 
+# 로그인 라우트
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+        
+        # 이메일 및 비밀번호 존재 여부 확인
+        if not email or not password:
+            return jsonify({"message": "Email and password are required"}), 400
+        
+        # 데이터베이스에서 이메일로 사용자 검색
+        user = Guest.query.filter_by(email=email).first()
+        if user and user.password == password:
+            logger.info('Login successful for user: %s', email)
+            return jsonify({"message": "Login successful!"}), 200
+        else:
+            logger.warning('Login failed for user: %s', email)
+            return jsonify({"message": "Invalid email or password"}), 401
+    
+    elif request.method == 'GET':
+        # GET 요청에 대한 처리
+        return jsonify({"message": "Please use POST to login."}), 200
+    
 # 설문조사 라우트
 @app.route('/survey', methods=['GET', 'POST'])
 def survey():
@@ -76,6 +104,42 @@ def survey():
         return jsonify({"message": "Survey submitted successfully!"}), 201
     else:  # GET 요청에 대한 처리
         return jsonify({"message": "Please use POST to submit a survey."}), 200
+
+def get_openai_response(option):
+    try:
+        # GPT-3.5 Turbo API 호출
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "전문적인 기타 지식을 가진 AI 멘토입니다."},
+                {"role": "user", "content": option}
+            ]
+        )
+        return response.choices[0].message['content']
+    except Exception as e:
+        logger.error('Error in OpenAI API call: %s', str(e))
+        raise
+
+@app.route('/chat', methods=['GET', 'POST'])
+def chat():
+    if request.method == 'POST':
+        data = request.get_json()
+        option = data.get('option')
+    elif request.method == 'GET':
+        option = request.args.get('option')
+    else:
+        return jsonify({"message": "Invalid request method"}), 405
+
+    if not option:
+        return jsonify({"message": "Option is required"}), 400
+
+    try:
+        assistant_message = get_openai_response(option)
+        logger.info('Chat successful with option: %s', option)
+        return jsonify({'response': assistant_message}), 200
+    except Exception as e:
+        logger.error('Error processing chat request: %s', str(e))
+        return jsonify({"message": "Error processing the request"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001)
