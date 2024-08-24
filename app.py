@@ -8,6 +8,8 @@ import openai
 import spacy  # 명사 추출
 import io
 import re     # 숫자 추출
+import random
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:today0430@database-1.cva6yg8oenlg.ap-northeast-2.rds.amazonaws.com/mentosdb'
@@ -61,6 +63,18 @@ class AIChatMessage(db.Model):
     role = db.Column(db.String(20))  # 'user' or 'assistant'
     content = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+class CookingPlan(db.Model):
+    __tablename__ = 'cooking_plan'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # 기본 키, 자동 증가
+    level = db.Column(db.String(50), nullable=False)  # 상, 중, 하
+    week_number = db.Column(db.Integer, nullable=False)  # 총 n주차의 과정
+    week = db.Column(db.Integer, nullable=False)  # 현재 해당 주차
+    dish_name = db.Column(db.String(100), nullable=False)  # 요리 이름
+    ingredients = db.Column(db.Text, nullable=False)  # 재료
+    tools = db.Column(db.Text, nullable=False)  # 도구
+    method = db.Column(db.Text, nullable=False)  # 방법
 
 class WeeklyTask(db.Model):
     __tablename__ = 'weekly_tasks'
@@ -232,10 +246,6 @@ def extract_learning_subject(text):
         return noun
     return None
 
-def extract_number(text):
-    match = re.search(r'\d+', text)
-    return int(match.group()) if match else None
-
 # 대화 히스토리 저장 함수    
 def save_message(chat_room_id, role, content):
     new_message = AIChatMessage(ai_chat_room_id=chat_room_id, role=role, content=content)
@@ -246,13 +256,13 @@ def save_message(chat_room_id, role, content):
 def get_chat_history(chat_room_id):
     return AIChatMessage.query.filter_by(ai_chat_room_id=chat_room_id).order_by(AIChatMessage.timestamp).all()
 
-# 개별화된 프롬프트 생성
+
+# 초반개별화된 프롬프트 생성
 def create_custom_prompt(hobby, weeks, level):
     if hobby == "요리":
         return (f"요리를 1주차부터 {weeks}주차까지의 과정으로 {level}단계에 맞게 주차별 요리 학습 계획을 제공하십시오. "
-                "각 주차마다 하나의 대중적인 요리를 배우는 내용을 포함하고, 필요한 재료와 도구를 아주 간단히 설명해 주세요."
+                "각 주차마다 하나의 대중적인 요리 이름만 포함해주세요."
                 "라면이나 계란 후라이 같은 기본적인 음식은 제외해주세요."
-                "요리 방법은 생략해주세요."
                 "음식에 관한 배경 설명은 안하셔도 됩니다. 한글만 사용하세요"
                 "각 주차별 내용은 새로운 줄에서 시작하고, 주차별 내용 사이에 한 줄의 공백을 추가해 주세요. "
                 "난이도는 현재 단계에 맞춰 점진적으로 어려워지게 해주세요.")
@@ -344,6 +354,7 @@ def start_chat():
         return jsonify({"message": "Internal Server Error"}), 500
 
 
+
 # 악기 관련 여부 판별
 def classify_hobby(hobby):
     prompt = f"{hobby}은(는) 악기 관련 취미인가요? 네 또는 아니오로 대답해 주세요."
@@ -372,6 +383,23 @@ def create_text_based_test(hobby):
     )
     return response['choices'][0]['message']['content']
 
+# 선택된 레벨과 주차 수에 따라 요리 계획을 랜덤으로 가져오는 함수
+def get_random_cooking_plans(level, weeks):
+    cooking_plans = []
+
+    for week in range(1, weeks + 1):
+        # 주어진 레벨과 주차에 해당하는 요리 계획들 중에서 랜덤으로 하나 선택
+        plans_for_week = CookingPlan.query.filter_by(level=level, week_number=weeks, week=week).all()
+
+        if plans_for_week:
+            selected_plan = random.choice(plans_for_week)
+            cooking_plans.append({
+                "id": selected_plan.id,
+                "week": selected_plan.week,
+                "dish_name": selected_plan.dish_name
+            })
+
+    return cooking_plans
 
 # 사용자 응답 처리
 @app.route('/chat', methods=['POST'])
@@ -402,13 +430,13 @@ def chat():
 
             save_message(chat_room_id, "user", user_message)  # 올바른 경우에만 저장
             save_message(chat_room_id, "assistant", f"{hobby}을(를) 배우고 싶으시군요. 몇 주 동안 배우고 싶으신가요?")
-            return jsonify({"response": f"{hobby}을(를) 배우고 싶으시군요. 몇 주 동안 배우고 싶으신가요?"})
+            return jsonify({"response": f"아하! {hobby}을(를) 배우고 싶으시군요.\n몇 주 동안 배우고 싶으신가요?"})
         else:
             # 잘못된 입력 처리 (메시지를 저장하지 않음)
             return jsonify({"response": "취미를 정확하게 입력해 주세요."})
 
     if len(chat_history) == 3:  # 두 번째 질문에 대한 답변이 완료된 경우
-        weeks = extract_number(user_message)
+        weeks = int(user_message)
         if weeks is None:
             return jsonify({"response": "숫자를 입력해 주세요."})
         
@@ -420,13 +448,13 @@ def chat():
             if is_instrument:
             # 악기 관련 레벨 테스트 (악보 생성)
                 sheet_music_description = create_sheet_music_description(hobby)
-                save_message(chat_room_id, "user", user_message)  # 올바른 경우에만 저장
+                save_message(chat_room_id, "user", int(user_message))  # 올바른 경우에만 저장
                 save_message(chat_room_id, "assistant", "난이도 테스트를 해보시고 '어렵다', '적당하다', '쉽다' 중에 하나를 선택해 주세요.")
                 return jsonify({"response": "난이도 테스트를 해보시고 '어렵다', '적당하다', '쉽다' 중에 하나를 선택해 주세요.", "sheet_music_description": sheet_music_description})  # 프론트가 설명을 받아 악보로 전환
             else:
                 # 악기가 아닌 경우 텍스트 기반 테스트 제공
                 text_test = create_text_based_test(hobby)
-                save_message(chat_room_id, "user", user_message)  # 올바른 경우에만 저장
+                save_message(chat_room_id, "user", int(user_message))  # 올바른 경우에만 저장
                 save_message(chat_room_id, "assistant", "난이도 테스트를 해보시고 '어렵다', '적당하다', '쉽다' 중에 하나를 선택해 주세요.")
                 return jsonify({"response": "난이도 테스트를 해보시고 '어렵다', '적당하다', '쉽다' 중에 하나를 선택해 주세요.", "text_test": text_test})
 
@@ -439,14 +467,23 @@ def chat():
         
         level = determine_level(difficulty_value)
         hobby = extract_learning_subject(chat_history[1].content)
-        weeks = extract_number(chat_history[3].content)
+        weeks = chat_history[3].content
         custom_prompt = create_custom_prompt(hobby, weeks, level)
 
-        # 프롬프트를 `assistant` 역할로서 응답 생성
-        response_text = get_custom_prompt_response(custom_prompt)
-        save_message(chat_room_id, "user", user_message)  # 올바른 경우에만 저장
-        save_message(chat_room_id, "assistant", response_text)
-        return jsonify({"response": response_text})
+        if hobby == '요리':
+            # 해당 레벨과 주차 수에 맞는 랜덤 요리 계획 가져오기
+            selected_plans = get_random_cooking_plans(level, weeks)
+            
+            # 결과 반환 (예시: JSON 응답으로 반환)
+            return jsonify({"selected_cooking_plans": selected_plans})
+        
+        # 다른 취미(임시로)
+        else:
+            # 프롬프트를 `assistant` 역할로서 응답 생성
+            response_text = get_custom_prompt_response(custom_prompt)
+            save_message(chat_room_id, "user", user_message)  # 올바른 경우에만 저장
+            save_message(chat_room_id, "assistant", response_text)
+            return jsonify({"response": response_text})
 
     # 그 외의 경우: OpenAI API 호출
     response_text = get_response(user_message, chat_room_id)
