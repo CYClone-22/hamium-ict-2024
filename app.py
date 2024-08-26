@@ -37,15 +37,17 @@ class Guest(db.Model):
     birthdate = db.Column(db.Date)
 
 class Survey(db.Model):
+    __tablename__ = 'survey'
+
     id = db.Column(db.Integer, primary_key=True)
     guest_id = db.Column(db.Integer, db.ForeignKey('guest.id'), nullable=False)
     role = db.Column(db.String(20))
     activity = db.Column(db.String(20))
-    experience_level = db.Column(db.Integer)
     gender = db.Column(db.Enum('male', 'female'))
     age_group = db.Column(db.Integer)
     location = db.Column(db.String(50))
     activity_level = db.Column(db.String(20))
+    name = db.Column(db.String(100), nullable=True)  # 이름 필드 추가
 
 class AIChatRoom(db.Model):
     __tablename__ = 'ai_chat_room'
@@ -68,13 +70,27 @@ class CookingPlan(db.Model):
     __tablename__ = 'cooking_plan'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # 기본 키, 자동 증가
-    level = db.Column(db.String(50), nullable=False)  # 상, 중, 하
-    week_number = db.Column(db.Integer, nullable=False)  # 총 n주차의 과정
-    week = db.Column(db.Integer, nullable=False)  # 현재 해당 주차
     dish_name = db.Column(db.String(100), nullable=False)  # 요리 이름
     ingredients = db.Column(db.Text, nullable=False)  # 재료
     tools = db.Column(db.Text, nullable=False)  # 도구
     method = db.Column(db.Text, nullable=False)  # 방법
+    step = db.Column(db.Numeric(8, 4), nullable=True)  # 단계, 소수점 아래 4자리까지
+
+class Plan(db.Model):
+    __tablename__ = 'plan'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    cooking_plan_id = db.Column(db.Integer, db.ForeignKey('cooking_plan.id'), nullable=False)
+    chat_room_id = db.Column(db.Integer, db.ForeignKey('ai_chat_room.id'), nullable=False)
+    goal_number = db.Column(db.Integer, nullable=False)
+
+class Method(db.Model):
+    __tablename__ = 'method'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    cooking_plan_id = db.Column(db.Integer, db.ForeignKey('cooking_plan.id'), nullable=False)
+    step_number = db.Column(db.Integer, nullable=False)
+    description = db.Column(db.Text, nullable=False)
 
 class WeeklyTask(db.Model):
     __tablename__ = 'weekly_tasks'
@@ -208,14 +224,14 @@ def survey():
         guest_id = data['guest_id']
         role = data['role']
         activity = data['activity']
-        experience_level = data['experience_level']
         gender = data['gender']
         age_group = data['age_group']
         location = data['location']
         activity_level = data['activity_level']
+        name = data['name']
         
-        new_survey = Survey(guest_id=guest_id, role=role, activity=activity, experience_level=experience_level, gender=gender,
-                            age_group=age_group, location=location, activity_level=activity_level)
+        new_survey = Survey(guest_id=guest_id, role=role, activity=activity,  gender=gender,
+                            age_group=age_group, location=location, activity_level=activity_level, name=name)
         db.session.add(new_survey)
         db.session.commit()
         
@@ -257,7 +273,7 @@ def get_chat_history(chat_room_id):
     return AIChatMessage.query.filter_by(ai_chat_room_id=chat_room_id).order_by(AIChatMessage.timestamp).all()
 
 
-# 초반개별화된 프롬프트 생성
+# 초반 개별화된 프롬프트 생성
 def create_custom_prompt(hobby, weeks, level):
     if hobby == "요리":
         return (f"요리를 1주차부터 {weeks}주차까지의 과정으로 {level}단계에 맞게 주차별 요리 학습 계획을 제공하십시오. "
@@ -279,6 +295,9 @@ def get_response(user_input, chat_room_id):
     chat_history = get_chat_history(chat_room_id)
     messages = [{"role": message.role, "content": message.content} for message in chat_history]
     
+    # 간결하게 대답하라는 지시 추가
+    messages.append({"role": "system", "content": "간결하게 대답해줘"})
+
     # 사용자 입력 추가
     messages.append({"role": "user", "content": user_input})
 
@@ -383,23 +402,59 @@ def create_text_based_test(hobby):
     )
     return response['choices'][0]['message']['content']
 
-# 선택된 레벨과 주차 수에 따라 요리 계획을 랜덤으로 가져오는 함수
-def get_random_cooking_plans(level, weeks):
-    cooking_plans = []
 
-    for week in range(1, weeks + 1):
-        # 주어진 레벨과 주차에 해당하는 요리 계획들 중에서 랜덤으로 하나 선택
-        plans_for_week = CookingPlan.query.filter_by(level=level, week_number=weeks, week=week).all()
+# 챌린지 제공 함수
+def create_plan_for_chat_room(level, chat_room_id, number):
+    # 레벨에 따른 단계 범위 비율 정의
+    level_ranges = {
+        '하': (0, 0.40),
+        '중': (0.30, 0.70),
+        '상': (0.60, 1.00)
+    }
 
-        if plans_for_week:
-            selected_plan = random.choice(plans_for_week)
-            cooking_plans.append({
-                "id": selected_plan.id,
-                "week": selected_plan.week,
-                "dish_name": selected_plan.dish_name
-            })
+    # 단계 비율을 가져옴
+    if level not in level_ranges:
+        return {"error": "잘못된 레벨입니다."}
 
-    return cooking_plans
+    min_ratio, max_ratio = level_ranges[level]
+
+    # 모든 요리 계획을 단계 기준으로 가져오고 스텝 값으로 오름차순 정렬
+    all_plans = CookingPlan.query.order_by(CookingPlan.step).all()
+
+    if not all_plans:
+        return {"error": "요리 계획이 없습니다."}
+
+    # 전체 단계 범위
+    min_step = all_plans[0].step
+    max_step = all_plans[-1].step
+
+    # 레벨에 따른 단계 범위 설정
+    min_step_value = min_step + (max_step - min_step) * min_ratio
+    max_step_value = min_step + (max_step - min_step) * max_ratio
+
+    # 단계 범위에 따라 필터링
+    filtered_plans = [plan for plan in all_plans if min_step_value <= plan.step <= max_step_value]
+
+    if not filtered_plans:
+        return {"error": "선택된 단계 범위의 요리 계획이 없습니다."}
+
+    # n개 항목을 랜덤으로 선택
+    selected_plans = random.sample(filtered_plans, min(number, len(filtered_plans)))
+
+    # 선택된 계획을 Plan 테이블에 추가
+    for idx, plan in enumerate(selected_plans, start=1):
+        new_plan = Plan(
+            cooking_plan_id=plan.id,
+            chat_room_id=chat_room_id,
+            goal_number=idx,
+            hobby='요리'
+        )
+        db.session.add(new_plan)
+
+    db.session.commit()  # 선택된 계획들을 Plan 테이블에 저장
+
+    return {"success": True}
+
 
 # 사용자 응답 처리
 @app.route('/chat', methods=['POST'])
@@ -428,62 +483,81 @@ def chat():
                 chat_room.activity = hobby
                 db.session.commit()
 
-            save_message(chat_room_id, "user", user_message)  # 올바른 경우에만 저장
-            save_message(chat_room_id, "assistant", f"{hobby}을(를) 배우고 싶으시군요. 몇 주 동안 배우고 싶으신가요?")
-            return jsonify({"response": f"아하! {hobby}을(를) 배우고 싶으시군요.\n몇 주 동안 배우고 싶으신가요?"})
-        else:
-            # 잘못된 입력 처리 (메시지를 저장하지 않음)
-            return jsonify({"response": "취미를 정확하게 입력해 주세요."})
+    #     # 난이도 테스트 문제 생성
+    #         is_instrument = classify_hobby(hobby)  # 악기 관련 여부를 판별
 
-    if len(chat_history) == 3:  # 두 번째 질문에 대한 답변이 완료된 경우
-        weeks = int(user_message)
-        if weeks is None:
-            return jsonify({"response": "숫자를 입력해 주세요."})
+    #         if is_instrument:
+    #         # 악기 관련 레벨 테스트 (악보 생성)
+    #             sheet_music_description = create_sheet_music_description(hobby)
+    #             save_message(chat_room_id, "user", user_message)  # 올바른 경우에만 저장
+    #             save_message(chat_room_id, "assistant", "아하! {hobby}을(를) 배우고 싶으시군요.\n 난이도 테스트를 해보시고 '어렵다', '적당하다', '쉽다' 중에 하나를 선택해 주세요.")
+    #             return jsonify({"response": "아하! {hobby}을(를) 배우고 싶으시군요.\n 난이도 테스트를 해보시고 '어렵다', '적당하다', '쉽다' 중에 하나를 선택해 주세요.", "sheet_music_description": sheet_music_description})  # 프론트가 설명을 받아 악보로 전환
+    #         else:
+    #             # 악기가 아닌 경우 텍스트 기반 테스트 제공
+    #             text_test =  " "   # 레시피에 대한 스텝 제공
+
+    #             save_message(chat_room_id, "user", user_message)  # 올바른 경우에만 저장
+    #             save_message(chat_room_id, "assistant", "아하! {hobby}을(를) 배우고 싶으시군요.\n 난이도 테스트를 해보시고 '어렵다', '적당하다', '쉽다' 중에 하나를 선택해 주세요.")
+    #             return jsonify({"response": "아하! {hobby}을(를) 배우고 싶으시군요.\n 난이도 테스트를 해보시고 '어렵다', '적당하다', '쉽다' 중에 하나를 선택해 주세요.", "text_test": text_test})
+
+    #     else:
+    #         # 잘못된 입력 처리 (메시지를 저장하지 않음)
+    #         return jsonify({"response": "취미를 정확하게 입력해 주세요."})
+
+
+    # if len(chat_history) == 3:  # 두 번째 질문에 대한 답변이 완료된 경우
+    #     try:
+    #         difficulty_value = int(user_message)  # 난이도 값을 숫자로 변환
+    #     except ValueError:
+    #         return jsonify({"response": "유효한 난이도 값을 입력해 주세요. (1: 어렵다, 2: 적당하다, 3: 쉽다)"})
         
-        # 난이도 테스트 문제 생성
-        hobby = extract_learning_subject(chat_history[1].content)
-        if hobby:
-            is_instrument = classify_hobby(hobby)  # 악기 관련 여부를 판별
+    #     difficulty_value = determine_level(difficulty_value)
+    #     save_message(chat_room_id, "user", user_message)  # 올바른 경우에만 저장
 
-            if is_instrument:
-            # 악기 관련 레벨 테스트 (악보 생성)
-                sheet_music_description = create_sheet_music_description(hobby)
-                save_message(chat_room_id, "user", int(user_message))  # 올바른 경우에만 저장
-                save_message(chat_room_id, "assistant", "난이도 테스트를 해보시고 '어렵다', '적당하다', '쉽다' 중에 하나를 선택해 주세요.")
-                return jsonify({"response": "난이도 테스트를 해보시고 '어렵다', '적당하다', '쉽다' 중에 하나를 선택해 주세요.", "sheet_music_description": sheet_music_description})  # 프론트가 설명을 받아 악보로 전환
-            else:
-                # 악기가 아닌 경우 텍스트 기반 테스트 제공
-                text_test = create_text_based_test(hobby)
-                save_message(chat_room_id, "user", int(user_message))  # 올바른 경우에만 저장
-                save_message(chat_room_id, "assistant", "난이도 테스트를 해보시고 '어렵다', '적당하다', '쉽다' 중에 하나를 선택해 주세요.")
-                return jsonify({"response": "난이도 테스트를 해보시고 '어렵다', '적당하다', '쉽다' 중에 하나를 선택해 주세요.", "text_test": text_test})
+    #     save_message(chat_room_id, "assistant","현재 상태는 %s입니다. 원하시는 챌린지의 갯수를 눌러주세요." %difficulty_value)
+    #     return jsonify({"response": "현재 상태는 %s입니다. 원하시는 챌린지의 갯수를 눌러주세요." %difficulty_value})
+       
 
+    # if len(chat_history) == 5:  # 세 번째 질문에 대한 답변이 완료된 경우
+    #     number = int(user_message)   # 챌린지 갯수
+    #     if number is None:
+    #         return jsonify({"response": "숫자를 입력해 주세요."})
+       
+    #     level = determine_level(difficulty_value)
+    #     hobby = extract_learning_subject(chat_history[1].content)
+    #     custom_prompt = create_custom_prompt(hobby, number, level)
 
-    if len(chat_history) == 5:  # 세 번째 질문에 대한 답변이 완료된 경우
-        try:
-            difficulty_value = int(user_message)  # 난이도 값을 숫자로 변환
-        except ValueError:
-            return jsonify({"response": "유효한 난이도 값을 입력해 주세요. (1: 어렵다, 2: 적당하다, 3: 쉽다)"})
-        
-        level = determine_level(difficulty_value)
-        hobby = extract_learning_subject(chat_history[1].content)
-        weeks = chat_history[3].content
-        custom_prompt = create_custom_prompt(hobby, weeks, level)
+    #     if hobby == '요리':
 
-        if hobby == '요리':
-            # 해당 레벨과 주차 수에 맞는 랜덤 요리 계획 가져오기
-            selected_plans = get_random_cooking_plans(level, weeks)
+    #         # 해당 레벨과 주차 수에 맞는 랜덤 요리 계획 생성
+    #         create_plan_for_chat_room(level, chat_room_id, number)
+
+    #         # 해당 채팅룸에 속하는 모든 plan 항목 가져오기
+    #         plans = Plan.query.filter_by(chat_room_id=chat_room_id).order_by(Plan.goal_number).all()
+
+    #         response_data = []
+    #         for plan in plans:
+    #             # 각 plan의 외래키로 CookingPlan 항목 가져오기
+    #             cooking_plan = CookingPlan.query.get(plan.cooking_plan_id)
+
+    #             response_data.append({
+    #                 "goal_number": plan.goal_number,
+    #                 "dish_name": cooking_plan.dish_name,
+    #             })
+
+    #         save_message(chat_room_id, "user", user_message)
+    #         save_message(chat_room_id, "assistant", response_data)
+
+    #         return jsonify({"response": response_data})
             
-            # 결과 반환 (예시: JSON 응답으로 반환)
-            return jsonify({"selected_cooking_plans": selected_plans})
-        
         # 다른 취미(임시로)
-        else:
-            # 프롬프트를 `assistant` 역할로서 응답 생성
-            response_text = get_custom_prompt_response(custom_prompt)
-            save_message(chat_room_id, "user", user_message)  # 올바른 경우에만 저장
-            save_message(chat_room_id, "assistant", response_text)
-            return jsonify({"response": response_text})
+        # else:
+        #     # 프롬프트를 `assistant` 역할로서 응답 생성
+        #     response_text = get_custom_prompt_response(custom_prompt)
+        #     save_message(chat_room_id, "user", user_message) 
+        #     save_message(chat_room_id, "assistant", response_text)
+        #     return jsonify({"response": response_text})
+
 
     # 그 외의 경우: OpenAI API 호출
     response_text = get_response(user_message, chat_room_id)
@@ -491,6 +565,75 @@ def chat():
     save_message(chat_room_id, "assistant", response_text)
     return jsonify({"response": response_text})
 
+
+## 해당 채팅룸에 대한 정보 다 반환
+@app.route('/goal', methods=['GET'])
+def get_weekly_goal():
+    chat_room_id = request.args.get("chat_room_id") 
+    number = request.args.get("number", type=int)  # 챌린지 개수 받기
+    level = request.args.get("level", type=int)   # 유저 레벨 
+
+    if not chat_room_id or number is None:
+        return jsonify({"message": "Chat Room ID and week number are required"}), 400
+    
+    # 해당 chat_room_id로 chat_room 레코드를 조회
+    chat_room = db.session.query(AIChatRoom).filter_by(id=chat_room_id).first()
+
+    # 조회된 chat_room의 activity가 '요리'인지 확인
+    if chat_room and chat_room.activity == '요리':
+
+        # 해당 레벨과 개수에 맞는 랜덤 요리 계획 생성
+        create_plan_for_chat_room(level, chat_room_id, number)
+
+        # 해당 채팅룸에 속하는 모든 plan 항목 다 가져오기
+        plans = Plan.query.filter_by(chat_room_id=chat_room_id).order_by(Plan.goal_number).all()
+
+        # 모든 plan의 정보를 담을 리스트
+        plan_details = []
+
+        for plan in plans:
+            # 각 Plan에 대해 CookingPlan 정보 가져오기
+            cooking_plan = CookingPlan.query.get(plan.cooking_plan_id)
+
+            if not cooking_plan:
+                return jsonify({"message": f"Plan ID {plan.id}에 해당하는 요리 계획을 찾을 수 없습니다."}), 404
+
+            # 해당 CookingPlan에 연결된 Method 정보를 가져오기
+            methods = Method.query.filter_by(cooking_plan_id=cooking_plan.id).order_by(Method.step_number).all()
+
+            # Method 정보를 담을 리스트
+            method_details = [{
+                "step_number": method.step_number,
+                "description": method.description
+            } for method in methods]
+
+            # CookingPlan의 정보와 그에 해당하는 Method 리스트를 딕셔너리에 담기
+            plan_details.append({       # 리스트 안에 리스트라 생각하세요
+                "plan_id": plan.id,
+                "goal_number": plan.goal_number,
+                "cooking_plan": {
+                    "id": cooking_plan.id,
+                    "dish_name": cooking_plan.dish_name,    # 요리 이름
+                    "ingredients": cooking_plan.ingredients,    # 재료
+                    "tools": cooking_plan.tools,    # 도구
+                    "step": cooking_plan.step,     # 은준 언니가 세운 점수임! 안 받아도 될듯
+                    "methods": method_details  # Method 정보를 담은 리스트 
+                }
+            })
+
+        # 모든 plan의 정보를 반환
+        return jsonify({"plans": plan_details})
+    
+    # 다른 취미(임시로)
+    # else:
+        # # 프롬프트를 `assistant` 역할로서 응답 생성
+        # response_text = get_custom_prompt_response(custom_prompt)
+        # save_message(chat_room_id, "assistant", response_text)
+        # return jsonify({"response": response_text})
+
+
+
+#### 여기 파트는 보류 (다른 취미들 임시용)
 
 def save_weekly_goals_and_tasks(chat_room_id, detailed_description):
     # 주차별 설명을 분리하는 정규 표현식
@@ -594,21 +737,6 @@ def get_hobby_target():
 
 ######### 학습 파트 #############
 
-@app.route('/weekly_goal', methods=['GET'])
-def get_weekly_goal():
-    chat_room_id = request.args.get("chat_room_id")
-    week_number = request.args.get("week_number", type=int)
-    
-    if not chat_room_id or week_number is None:
-        return jsonify({"message": "Chat Room ID and week number are required"}), 400
-
-    weekly_task = WeeklyTask.query.filter_by(chat_room_id=chat_room_id, week_number=week_number).first()
-
-    if not weekly_task:
-        return jsonify({"message": "No tasks found for the given chat room ID and week number"}), 404
-    
-    return jsonify({"weekly_goal": weekly_task.goal})
-
 
 @app.route('/weekly_task_description', methods=['GET'])
 def get_weekly_task_description():
@@ -710,11 +838,11 @@ def load_data():
                 "guest_id": survey.guest_id,
                 "role": survey.role,
                 "activity": survey.activity,
-                "experience_level": survey.experience_level,
                 "gender": survey.gender,
                 "age_group": survey.age_group,
                 "location": survey.location,
-                "activity_level": survey.activity_level
+                "activity_level": survey.activity_level,
+                "name": survey.name
             }
             for survey in surveys
         ]
@@ -736,11 +864,11 @@ def get_mentee_info(mentee_id):
                 "guest_id": mentee.guest_id,
                 "role": mentee.role,
                 "activity": mentee.activity,
-                "experience_level": mentee.experience_level,
                 "gender": mentee.gender,
                 "age_group": mentee.age_group,
                 "location": mentee.location,
-                "activity_level": mentee.activity_level
+                "activity_level": mentee.activity_level,
+                "name": mentee.name
             }
             return mentee_info
         else:
