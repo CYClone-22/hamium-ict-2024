@@ -35,7 +35,7 @@ class Guest(db.Model):
     password = db.Column(db.String(255), nullable=False)
     gender = db.Column(db.Enum('male', 'female'))
     birthdate = db.Column(db.Date)
-    name = db.Column(db.String(100), nullable=True)  # 이름 필드 추가
+    
 
 
 class Survey(db.Model):
