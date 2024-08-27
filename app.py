@@ -852,7 +852,7 @@ def load_data():
                 "age_group": survey.age_group,
                 "location": survey.location,
                 "activity_level": survey.activity_level,
-                "name": guest.name  # Guest의 name 필드 추가
+        
             }
             for survey, guest in results
         ]
@@ -879,7 +879,7 @@ def get_mentee_info(mentee_id):
                 "age_group": mentee.age_group,
                 "location": mentee.location,
                 "activity_level": mentee.activity_level,
-                "name": guest.name  # Guest의 name 필드 추가
+            
             }
             return mentee_info
         else:
