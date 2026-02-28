@@ -331,12 +331,6 @@ Korea Information Processing Society (2024)
 
 <br>
 
-# 🎥 Demo  
-
----
-
-<br>
-
 # 📌 Key Takeaways  
 
 ---
