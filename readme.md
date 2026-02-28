@@ -335,12 +335,6 @@ Korea Information Processing Society (2024)
 
 ---
 
-### ▶ Project Demonstration Video  
-
-🔗 https://www.youtube.com/watch?v=uKwuGcCNkrA  
-
----
-
 <br>
 
 # 📌 Key Takeaways  
