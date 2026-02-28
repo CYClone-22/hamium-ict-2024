@@ -242,3 +242,115 @@ Applied clustering algorithms:
 - Integration testing  
 
 ---
+
+## 5.2 ⚠ Challenges & Solutions  
+
+### 1️⃣ Environment Version Conflict  
+
+**Problem**  
+Code execution failed when transferring between different PCs.
+
+**Cause**  
+Tool and dependency version mismatch.
+
+**Solution**  
+- Standardized development environment versions  
+- Documented configuration rules  
+- Unified dependency management strategy  
+
+---
+
+### 2️⃣ Execution Errors During Development  
+
+**Problem**  
+Persistent runtime errors in specific modules.
+
+**Solution**  
+- Independent debugging sessions  
+- Code review process implementation  
+- Shared knowledge sessions to prevent recurrence  
+- Error documentation for future reference  
+
+---
+
+<br>
+
+# 🏆 6. Achievements  
+
+---
+
+## 📄 Academic Publication  
+
+**Presented at**  
+Korea Information Processing Society (2024)
+
+**Topic**  
+> “Importance of Data Collection and Refinement for Mentor Matching and AI Tutoring Project”
+
+---
+
+## 🥇 Competition Award  
+
+**2024 ICT Mentoring Competition**  
+
+- 🏅 Award: **Honorable Mention (Finalist)**  
+
+---
+
+<br>
+
+# 📈 7. Expected Impact  
+
+---
+
+## 7.1 👤 User Perspective  
+
+- 💰 Affordable mentoring alternative  
+- ⏰ 24/7 AI-based learning support  
+- 🎯 Personalized recommendation experience  
+- 🚀 Reduced entry barrier for new hobbies  
+
+---
+
+## 7.2 🎓 Educational Perspective  
+
+### 💡 Practical Experience In:
+
+- Deep Learning  
+- NLP  
+- Recommendation Systems  
+- Full-stack development  
+
+### 📚 Improved Knowledge In:
+
+- Search algorithms  
+- Clustering techniques  
+- AI system design  
+
+---
+
+<br>
+
+# 🎥 Demo  
+
+---
+
+### ▶ Project Demonstration Video  
+
+🔗 https://www.youtube.com/watch?v=uKwuGcCNkrA  
+
+---
+
+<br>
+
+# 📌 Key Takeaways  
+
+---
+
+- 🚀 Implemented an end-to-end AI-powered mentoring platform  
+- 🔄 Applied hybrid recommendation techniques  
+- 🧠 Designed clustering-based adaptive learning paths  
+- 💬 Integrated NLP-based conversational tutoring  
+- 🖥 Gained full-stack development experience from frontend to backend  
+
+---
