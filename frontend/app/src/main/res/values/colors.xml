@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorBlack">#FF000000</color>
+    <color name="colorWhite">#FFFFFFFF</color>
+    <color name="colorGray">#808080</color>
+    <color name="colorLightGray">#D3D3D3</color>
+
+    <color name="colorTransparent">#00ff0000</color>
+    <color name="colorBurgundy">#760c0c</color>
+    <color name="colorDeepPurple">#8E44AD</color>
+    <color name="colorDeepPurple2">#7D3C98</color>
+
+
+
+    <color name="colorYellow">#FFFF00</color>
+    <color name="colorRoyalBlue">#0123B4</color>
+    <color name="colorLightYellow">#FFFACD</color>
+    <color name="colorLightBlue">#ADD8E6</color>
+<!--    <color name="colorLightBlue">#6495ED</color>-->
+
+    <color name="colorLightGreen">#D5FF00</color>
+    <color name="colorMint">#6EC6CA</color>
+
+
+    <color name="colorLightPurple">#C8B6E2</color>
+    <color name="colorPurple">#836FB3</color>
+
+
+<!--    theme setting-->
+    <color name="background_color">#FFFBFF</color>
+    <color name="button_color">#674FA3</color>
+
+<!--     community-->
+    <color name="light_gray">#F3EFEF</color>
+    <color name="light_black">#43000000</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="whitegray">#E8E1E1</color>
+    <color name="red">#d94925</color>
+    <color name="gray">#9D9594</color>
+    <color name="blue">#1E8DD0</color>
+
+
+</resources>

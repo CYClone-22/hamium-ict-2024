@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center">
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/splash"
+            android:scaleType="centerCrop"
+            android:alpha="0.7"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:id="@+id/splashlogo"
+                android:layout_marginTop="15dp"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:src="@drawable/mentoslogo"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="20dp"
+                android:textColor="@color/colorBlack"
+                android:text="당신의 취미가 일상에 더하는 즐거움 \n멘토스가 함께하겠습니다"
+                android:textColorHighlight="@color/colorWhite"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

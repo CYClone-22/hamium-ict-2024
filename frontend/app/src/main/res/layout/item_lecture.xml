@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"> <!-- 테두리 적용 -->
+
+    <WebView
+        android:id="@+id/lecture_video"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+    <!-- 영상 사진을 표시할 ImageView -->
+<!--    <ImageView-->
+<!--        android:id="@+id/lecture_image"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="200dp"-->
+<!--        android:scaleType="fitCenter"-->
+<!--        android:src="@drawable/sample_image" />-->
+
+    <!-- 강의 이름을 표시할 TextView -->
+    <TextView
+        android:id="@+id/lecture_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="강의 이름"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- 취미 종류를 표시할 TextView -->
+    <TextView
+        android:id="@+id/hobby_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="취미 종류"
+        android:textSize="14sp" />
+
+    <!-- 난이도를 표시할 TextView -->
+    <TextView
+        android:id="@+id/difficulty_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="난이도"
+        android:textSize="14sp" />
+
+</LinearLayout>

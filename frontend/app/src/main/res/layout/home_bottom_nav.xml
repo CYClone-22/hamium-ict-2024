@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/root_layout"
+    android:background="@color/background_color">
+
+    <!-- Fragment를 표시할 컨테이너 -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_collapseMode="pin"
+        app:layout_anchorGravity="top"
+        />
+
+    <!-- BottomAppBar와 BottomNavigationView -->
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/main_bottom_appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:fabCradleMargin="10dp"
+        app:fabCradleRoundedCornerRadius="10dp"
+        app:fabCradleVerticalOffset="5dp"
+        app:hideOnScroll="false">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/main_bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:itemBackground="@android:color/transparent"
+            app:itemRippleColor="@android:color/transparent"
+            app:itemIconSize="28dp"
+            app:menu="@menu/menu_bottom_nav"
+            app:itemHorizontalTranslationEnabled="false"/>
+
+    </com.google.android.material.bottomappbar.BottomAppBar>
+
+    <!-- FloatingActionButton -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/main_floating_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorTransparent"
+        app:borderWidth="0dp"
+        android:src="@drawable/mentoslogo"
+        app:layout_anchor="@id/main_bottom_appBar"
+        app:layout_anchorGravity="center"
+        app:maxImageSize="80dp"
+        app:fabCustomSize="@dimen/fab_image_size"
+        app:fabCradleVerticalOffset="5dp"
+        app:tint="@null"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_color">
+
+    <!-- 상단에 고정된 텍스트 영역 -->
+    <TextView
+        android:id="@+id/top_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:padding="5dp"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:textColor="@color/colorWhite"
+        android:text="과제"
+        android:textStyle="bold"
+        android:background="@color/colorLightPurple" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <!-- 취미 리스트 컨테이너 (왼쪽) -->
+        <LinearLayout
+            android:id="@+id/hobby_list_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="0.8"
+                android:contentDescription="Hobby list scroll view">
+
+                <LinearLayout
+                    android:id="@+id/hobby_buttons_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <!-- 취미 버튼들이 여기에 동적으로 추가됩니다. -->
+                </LinearLayout>
+            </ScrollView>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="bottom"
+                android:layout_gravity="bottom"
+                android:padding="10dp">
+
+                <Switch
+                    android:id="@+id/switch_task_lecture"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:textColor="@android:color/white"
+                    android:thumb="@drawable/custom_switch_thumb"
+                    android:track="@drawable/custom_switch_track"
+                    android:switchMinWidth="70sp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 경계선 -->
+        <View
+            android:id="@+id/boundary_view"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorGray"/>
+
+        <!-- 프래그먼트 컨테이너 (오른쪽) -->
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3" />
+    </LinearLayout>
+</LinearLayout>

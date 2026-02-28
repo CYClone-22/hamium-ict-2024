@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="312dp"
+        android:layout_height="102dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/round_border"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_userImage"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/puppy"
+            app:civ_border_overlay="true" />
+
+        <LinearLayout
+            android:layout_width="169dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text=""
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/profile_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text=""
+                android:textColor="#888888"
+                android:textSize="8sp" />
+
+            <TextView
+                android:id="@+id/profile_age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text=""
+                android:textSize="8sp"
+                app:layout_constraintBottom_toTopOf="@+id/profile_blockButton"
+                app:layout_constraintEnd_toEndOf="@+id/profile_base"
+                app:layout_constraintHorizontal_bias="0.13"
+                app:layout_constraintStart_toEndOf="@+id/profile_userImage"
+                app:layout_constraintTop_toBottomOf="@+id/profile_name"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/profile_gender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text=""
+                android:textSize="8sp"
+                app:layout_constraintBottom_toTopOf="@+id/profile_connectButton"
+                app:layout_constraintEnd_toEndOf="@+id/profile_base"
+                app:layout_constraintHorizontal_bias="0.022"
+                app:layout_constraintStart_toEndOf="@+id/profile_age"
+                app:layout_constraintTop_toTopOf="@+id/profile_base"
+                app:layout_constraintVertical_bias="0.483" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/profile_favorite"
+            android:layout_width="32dp"
+            android:layout_height="33dp"
+            android:src="@drawable/loveg"
+            tools:layout_editor_absoluteX="336dp"
+            tools:layout_editor_absoluteY="56dp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/profile_connectButton"
+        android:layout_width="59.75dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout3"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout3"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout3"
+        app:srcCompat="@drawable/connect" />
+
+    <ImageView
+        android:id="@+id/profile_blockButton"
+        android:layout_width="59.75dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="70dp"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout3"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout3"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout3"
+        app:srcCompat="@drawable/block"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

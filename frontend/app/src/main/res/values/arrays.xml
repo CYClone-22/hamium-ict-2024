@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="hobby">
+        <item>피아노</item>
+        <item>기타</item>
+        <item>바이올린</item>
+        <item>첼로</item>
+        <item>요리</item>
+        <item>베이킹</item>
+        <item>뜨개질</item>
+        <item>프랑스 자수</item>
+
+
+
+
+
+
+
+    </string-array>
+    
+    
+    
+</resources>

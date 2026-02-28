@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color">
+
+    <!-- 상단 레이아웃 (배경색 적용) -->
+    <RelativeLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:background="@color/colorLightPurple"
+        android:padding="8dp"
+        android:gravity="center_vertical">
+
+        <!-- 왼쪽 상단에 이미지 버튼 -->
+        <ImageButton
+            android:id="@+id/btn_goback_list"
+            android:layout_width="40dp"
+            android:layout_height="35dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/back"
+            android:contentDescription="Left Top Button"
+            android:background="@color/colorTransparent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"/>
+
+        <!-- 대화 상대방의 이름을 표시할 TextView -->
+        <TextView
+            android:id="@+id/textview_chat_partner_name"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_toEndOf="@id/btn_goback_list"
+            android:layout_alignTop="@id/btn_goback_list"
+            android:layout_marginStart="25dp"
+            android:text="대화 상대 이름"
+            android:textSize="25sp"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+
+        <!-- 오른쪽에 list.png 이미지 버튼 배치 -->
+        <ImageButton
+            android:id="@+id/btn_assignment_list"
+            android:layout_width="40dp"
+            android:layout_height="35dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/assignment_list"
+            android:contentDescription="Right Top Button"
+            android:background="@color/colorTransparent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"/>
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/input_layout"
+        android:layout_below="@id/top_layout"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/background_color"/>
+
+    <RelativeLayout
+        android:id="@+id/input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="8dp"
+        android:background="@color/colorWhite">
+
+        <EditText
+            android:id="@+id/edit_text_message"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_toLeftOf="@+id/btn_send"
+            android:hint="Type your message..." />
+
+        <ImageButton
+            android:id="@+id/btn_send"
+            android:layout_gravity="bottom"
+            android:backgroundTint="@color/colorTransparent"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_send_lightpurple"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:padding="7dp"
+            android:contentDescription="Send Button" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

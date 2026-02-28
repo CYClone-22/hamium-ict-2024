@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <!-- 상단 레이아웃 (배경색 적용) -->
+    <RelativeLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:background="@color/button_color"
+        android:padding="8dp"
+        android:gravity="center_vertical">
+
+        <!-- 왼쪽 상단에 이미지 버튼 -->
+        <ImageButton
+            android:id="@+id/btn_goback_list"
+            android:layout_width="40dp"
+            android:layout_height="35dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/back"
+            android:contentDescription="Left Top Button"
+            android:background="@color/colorTransparent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"/>
+
+        <!-- 대화 상대방의 이름을 표시할 TextView -->
+        <TextView
+            android:id="@+id/textview_chat_partner_name"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_toEndOf="@id/btn_goback_list"
+            android:layout_alignTop="@id/btn_goback_list"
+            android:layout_marginStart="20dp"
+            android:text=""
+            android:textSize="27sp"
+            android:textColor="@color/colorWhite"
+            android:textStyle="italic"/>
+
+        <!-- 오른쪽에 list.png 이미지 버튼 배치 -->
+        <ImageButton
+            android:id="@+id/btn_assignment_list"
+            android:layout_width="40dp"
+            android:layout_height="35dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/assignment_list"
+            android:contentDescription="Right Top Button"
+            android:background="@color/colorTransparent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"/>
+
+    </RelativeLayout>
+
+
+    <!-- 진행 중인 상태를 보여줄 ProgressBar -->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/matching_chat_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/input_layout"
+        android:layout_below="@id/top_layout"
+        android:layout_marginTop="65dp"
+        android:background="@color/background_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_layout"
+        tools:layout_editor_absoluteX="-16dp" />
+
+    <RelativeLayout
+        android:id="@+id/progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="#80000000"> <!-- 투명도 있는 배경 -->
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorWhite"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/matching_chat_recyclerview">
+
+        <EditText
+            android:id="@+id/edit_text_message"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_toLeftOf="@+id/btn_send"
+            android:hint="Type your message..."
+            android:text="" />
+
+        <ImageButton
+            android:id="@+id/btn_send"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="bottom"
+            android:adjustViewBounds="true"
+            android:backgroundTint="@color/colorTransparent"
+            android:contentDescription="Send Button"
+            android:padding="7dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_send_color" />
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/profile_base"
+        android:layout_width="365dp"
+        android:layout_height="259dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.093"
+        app:srcCompat="@drawable/rectangle" />
+
+    <!--    사진-->
+    <ImageView
+        android:id="@+id/profile_userImage"
+        android:layout_width="99dp"
+        android:layout_height="95dp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_base"
+        app:layout_constraintEnd_toEndOf="@+id/profile_base"
+        app:layout_constraintHorizontal_bias="0.06"
+        app:layout_constraintStart_toStartOf="@+id/profile_base"
+        app:layout_constraintTop_toTopOf="@+id/profile_base"
+        app:layout_constraintVertical_bias="0.31"
+        app:srcCompat="@drawable/logo_person" />
+
+    <!--    멘토 수준-->
+
+    <ImageButton
+        android:id="@+id/profile_cancelButton"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_connectButton"
+        app:layout_constraintEnd_toEndOf="@+id/profile_base"
+        app:layout_constraintHorizontal_bias="0.931"
+        app:layout_constraintStart_toStartOf="@+id/profile_connectButton"
+        app:layout_constraintTop_toTopOf="@+id/profile_base"
+        app:layout_constraintVertical_bias="0.262"
+        app:srcCompat="@drawable/x_logo" />
+
+    <ImageButton
+        android:id="@+id/profile_connectButton"
+        android:layout_width="239dp"
+        android:layout_height="52dp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_base"
+        app:layout_constraintEnd_toEndOf="@+id/profile_base"
+        app:layout_constraintStart_toStartOf="@+id/profile_base"
+        app:layout_constraintTop_toTopOf="@+id/profile_base"
+        app:layout_constraintVertical_bias="0.806"
+        app:srcCompat="@drawable/connect" />
+
+<!--    찜하기-->
+    <ImageView
+        android:id="@+id/profile_favorite"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_connectButton"
+        app:layout_constraintEnd_toEndOf="@+id/profile_base"
+        app:layout_constraintHorizontal_bias="0.943"
+        app:layout_constraintStart_toStartOf="@+id/profile_base"
+        app:layout_constraintTop_toTopOf="@+id/profile_base"
+        app:layout_constraintVertical_bias="0.937"
+        app:srcCompat="@drawable/empty_heart" />
+
+    <TextView
+        android:id="@+id/profile_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_base"
+        app:layout_constraintEnd_toEndOf="@+id/profile_base"
+        app:layout_constraintHorizontal_bias="0.132"
+        app:layout_constraintStart_toEndOf="@+id/profile_userImage"
+        app:layout_constraintTop_toBottomOf="@+id/profile_age"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <!--    멘토 이름-->
+    <TextView
+        android:id="@+id/profile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="68dp"
+        android:text=""
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/profile_base"
+        app:layout_constraintHorizontal_bias="0.128"
+        app:layout_constraintStart_toEndOf="@+id/profile_userImage"
+        app:layout_constraintTop_toTopOf="@+id/profile_base"
+        app:layout_constraintVertical_bias="0.474" />
+
+    <!--    멘토 나이-->
+    <TextView
+        android:id="@+id/profile_age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text=""
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="@+id/profile_base"
+        app:layout_constraintHorizontal_bias="0.135"
+        app:layout_constraintStart_toEndOf="@+id/profile_userImage"
+        app:layout_constraintTop_toBottomOf="@+id/profile_name"
+        app:layout_constraintVertical_bias="0.15" />
+
+    <TextView
+        android:id="@+id/profile_slash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="/"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_base"
+        app:layout_constraintEnd_toEndOf="@+id/profile_base"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/profile_age"
+        app:layout_constraintTop_toTopOf="@+id/profile_base"
+        app:layout_constraintVertical_bias="0.412" />
+
+    <!--    멘토 성별-->
+    <TextView
+        android:id="@+id/profile_gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@+id/profile_connectButton"
+        app:layout_constraintEnd_toEndOf="@+id/profile_base"
+        app:layout_constraintHorizontal_bias="0.03"
+        app:layout_constraintStart_toEndOf="@+id/profile_age"
+        app:layout_constraintTop_toTopOf="@+id/profile_base"
+        app:layout_constraintVertical_bias="0.664" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

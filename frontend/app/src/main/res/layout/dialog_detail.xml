@@ -1,0 +1,46 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="390dp"
+    android:layout_height="450dp"
+    android:padding="20dp"
+    android:background="@drawable/leveltest_background">
+
+    <ImageView
+        android:id="@+id/dialog_image"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:id="@+id/dialog_text"
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/dialog_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:textSize="16sp"
+        android:textColor="@android:color/black" />
+
+    <ImageButton
+        android:id="@+id/button_Previous"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/leveltest_left_btn"
+        android:padding="0dp"
+        android:scaleType="centerInside"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="0dp" />
+
+    <ImageButton
+        android:id="@+id/button_Next"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/leveltest_right_btn"
+        android:padding="0dp"
+        android:scaleType="centerInside"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="0dp"/>
+
+</RelativeLayout>

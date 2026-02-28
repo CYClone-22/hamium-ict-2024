@@ -1,0 +1,58 @@
+<resources>
+    <string name="app_name">Mentos</string>
+
+    <!-- Login -->
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="signin_email">로그인</string>
+    <string name="signin_find_password">비밀번호 찾기</string>
+    <string name="signin">회원가입</string>
+
+    <string name="move_to_normal_chat">위의 계획표가 마음에 드신다면, [이동]버튼을 눌러 멘토링을 진행해 주십시오. \n튜터링 정보를 재설정하고 싶으신 경우, [재시작] 버튼을 눌러주세요.</string>
+    <string name="start_guideline">- - - - - - - - - - - - - - - - - - - - - Start Chat - - - - - - - - - - - - - - - - - - - - -</string>
+
+    <string name="start_leveltest">레벨테스트를 진행하겠습니다. 시작 버튼을 눌러 진행해주세요.</string>
+
+    <string name="leveltest_1">문제 1. 계란을 완벽하게 삶기 위해\n가장 적합한 방법은?</string>
+    <string name="leveltest_1_choice1">찬물에 계란을 넣고 바로 끓이기 시작한다</string>
+    <string name="leveltest_1_choice2">끓는 물에 계란을 바로 넣는다</string>
+    <string name="leveltest_1_choice3">계란을 상온에 둔 후 끓는 물에 넣는다</string> <!-- 정답 -->
+    <string name="leveltest_1_choice4">전자레인지에 넣고 가열한다</string>
+    <string name="leveltest_not_choice">모르겠다 </string>
+
+
+
+    <string name="leveltest_2">문제 2. 오븐에서 빵을 구울 때 빵이\n골고루 익도록 하는 가장 좋은 방법은?</string>
+    <string name="leveltest_2_choice1">오븐의 문을 자주 연다</string>
+    <string name="leveltest_2_choice2">오븐의 문을 절대 열지 않는다</string>
+    <string name="leveltest_2_choice3">오븐의 온도를 낮춘다</string>
+    <string name="leveltest_2_choice4">오븐 내부의 팬을 돌린다</string> <!-- 정답 -->
+
+
+
+    <string name="leveltest_3">문제 3. 튀김 요리를 할 때 기름의\n적절한 온도는? </string>
+    <string name="leveltest_3_choice1">100도</string>
+    <string name="leveltest_3_choice2">150도</string>
+    <string name="leveltest_3_choice3">180도</string> <!-- 정답 -->
+    <string name="leveltest_3_choice4">200도</string>
+
+
+
+    <string name="leveltest_4">문제 4. 달걀을 스크램블 에그로 만들 때 부드러운 식감을 얻기 위한 방법은? </string>
+    <string name="leveltest_4_choice1">높은 불에서 빠르게 조리한다</string>
+    <string name="leveltest_4_choice2">달걀에 소금을 미리 넣고 저어준다</string>
+    <string name="leveltest_4_choice3">달걀에 물을 섞는다</string>
+    <string name="leveltest_4_choice4">중약불에서 천천히 조리한다</string> <!-- 정답 -->
+
+
+    <string name="leveltest_5">문제 5. 다음 중 파스타를 끓일 때 잘못된 방법은 무엇일까요? </string>
+    <string name="leveltest_5_choice1">파스타를 삶은 후 바로 찬물에 헹군다</string> <!-- 정답 -->
+    <string name="leveltest_5_choice2">파스타를 끓일 때 오일을 넣는다</string>
+    <string name="leveltest_5_choice3">파스타를 끓이는 물을 충분히 넣는다</string>
+    <string name="leveltest_5_choice4">물을 끓인 후 소금을 넣는다</string>
+
+    <string name="challenge_btns_guide">원하시는 챌린지 개수를 설정하세요.</string>
+
+
+
+</resources>

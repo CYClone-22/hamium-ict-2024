@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="370dp"
+    android:layout_height="440dp"
+    android:padding="20dp"
+    android:background="@drawable/leveltest_background">
+
+    <!-- X 이미지 버튼 -->
+    <ImageButton
+        android:id="@+id/button_close"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:src="@drawable/x_logo"
+        android:scaleType="centerCrop"
+        android:background="?attr/selectableItemBackgroundBorderless"/>
+
+    <!-- 가운데 큰 문제 텍스트 -->
+    <TextView
+        android:id="@+id/question_text"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="@string/leveltest_1"
+        android:textSize="19sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="35dp"
+        android:layout_marginBottom="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/button_close"/>
+
+    <!-- 중앙 레이아웃 -->
+    <LinearLayout
+        android:id="@+id/central_layout"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/question_text"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- 세로로 나열된 5개의 버튼 -->
+        <LinearLayout
+            android:id="@+id/options_group"
+            android:layout_width="210dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/option_1"
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/leveltest_rounded_button_lightgray"
+                android:text="@string/leveltest_1_choice1"
+                android:layout_marginBottom="7dp"/>
+
+            <Button
+                android:id="@+id/option_2"
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/leveltest_rounded_button_lightgray"
+                android:text="@string/leveltest_1_choice2"
+                android:layout_marginBottom="7dp"/>
+
+            <Button
+                android:id="@+id/option_3"
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/leveltest_rounded_button_lightgray"
+                android:text="@string/leveltest_1_choice3"
+                android:layout_marginBottom="7dp"/>
+
+            <Button
+                android:id="@+id/option_4"
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/leveltest_rounded_button_lightgray"
+                android:text="@string/leveltest_1_choice4"
+                android:layout_marginBottom="7dp"/>
+
+            <Button
+                android:id="@+id/option_5"
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/leveltest_rounded_button_lightgray"
+                android:text="@string/leveltest_not_choice" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 왼쪽 버튼 -->
+    <ImageButton
+        android:id="@+id/button_Previous"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/leveltest_left_btn_disabled"
+        android:padding="0dp"
+        android:scaleType="centerInside"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="0dp"/>
+
+    <!-- 오른쪽 버튼 -->
+    <ImageButton
+        android:id="@+id/button_Next"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/leveltest_right_btn"
+        android:padding="0dp"
+        android:scaleType="centerInside"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="0dp"/>
+
+</RelativeLayout>

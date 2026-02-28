@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Mentos" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="android:windowBackground">@color/background_color</item>
+        <item name="colorPrimaryDark">@color/button_color</item>
+    </style>
+
+    <!-- App theme -->
+    <style name="Theme.Mentos" parent="Base.Theme.Mentos">
+        <item name="colorPrimaryDark">@color/button_color</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+
+    <!-- 전체 화면 테마 추가 -->
+    <style name="Theme.Mentos.FullScreen" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <!-- 다이얼로그 애니메이션 -->
+    <style name="DialogAnimation" parent="Base.Theme.Mentos">
+        <item name="android:windowEnterAnimation">@anim/slide_in_right</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_left</item>
+    </style>
+
+    <!-- 오른쪽에서 왼쪽으로 슬라이드 애니메이션 -->
+    <style name="DialogSlideInFromLeft">
+        <item name="android:windowEnterAnimation">@anim/slide_in_from_left</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_to_right</item>
+    </style>
+
+    <!-- 왼쪽에서 오른쪽으로 슬라이드 애니메이션 -->
+    <style name="DialogSlideInFromRight">
+        <item name="android:windowEnterAnimation">@anim/slide_in_from_right</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_to_left</item>
+    </style>
+
+    <!-- 버튼 기본 스타일 -->
+    <!--
+    <style name="CustomButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">@color/button_color</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+    -->
+
+</resources>
